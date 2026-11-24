@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PM QUEST – Host Interface</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚔️</text></svg>">
+</head>
+<body>
+
+  <!-- Confetti Canvas for Victory Celebrations -->
+  <canvas id="confettiCanvas"></canvas>
+
+  <div class="quest-window">
+    <!-- Window Title Bar -->
+    <header class="window-titlebar">
+      <div class="titlebar-left">
+        <span class="titlebar-icon">■</span>
+        <span>PM_QUEST.EXE [HOST_CONSOLE]</span>
+      </div>
+      <div class="titlebar-controls">
+        <button class="window-btn" id="soundToggleBtn" title="Toggle Sound">🔊</button>
+        <button class="window-btn" onclick="location.reload()" title="Refresh">↻</button>
+        <button class="window-btn" onclick="resetGamePrompt()" title="Reset Game">X</button>
+      </div>
+    </header>
+
+    <!-- Status Bar (Score, Room, Phase) -->
+    <div class="window-statusbar">
+      <div class="status-badges-group">
+        <div class="retro-badge room-badge">
+          <span>ROOM:</span>
+          <strong id="roomCodeDisplay">PMQUEST</strong>
+        </div>
+        <div class="retro-badge checkpoint-badge">
+          <span>CHECKPOINT:</span>
+          <strong id="statusBarCheckpoint">1 / 9</strong>
+        </div>
+        <div class="retro-badge score-badge">
+          <span>TEAMS:</span>
+          <strong id="statusBarTeamsCount">0</strong>
+        </div>
+      </div>
+
+      <div class="status-controls-group">
+        <button class="btn-retro sm" id="btnNavRoadmap" onclick="hostNavigate('roadmap')">🗺️ Roadmap</button>
+        <button class="btn-retro sm" id="btnNavLeaderboard" onclick="hostNavigate('leaderboard')">🏆 Leaderboard</button>
+      </div>
+    </div>
+
+    <!-- Main Content Body -->
+    <main class="window-content" id="mainContainer">
+
+      <!-- ==========================================
+           VIEW 1: LOBBY / WAITING ROOM
+           ========================================== -->
+      <section id="viewLobby" class="view-section">
+        <div class="dialog-row">
+          <div class="dialog-avatar-frame">🧙‍♂️</div>
+          <div class="dialog-box brown">
+            <span class="dialog-speaker-tag">Host Instructor:</span>
+            <p class="dialog-text">
+              "Welcome to <strong>PM QUEST</strong>! Ask classmates to scan the QR code with their mobile phones, enter a team name, and join our quest room!"
+            </p>
+          </div>
+        </div>
+
+        <div class="lobby-grid">
+          <!-- QR Code & Link Card -->
+          <div class="qr-card">
+            <h3 style="font-family: var(--font-pixel); font-size: 13px; color: var(--c-wood); margin-bottom: 8px;">
+              📱 SCAN TO JOIN THE QUEST
+            </h3>
+            <p style="font-size: 14px; color: var(--c-gray); margin-bottom: 4px;">
+              Point your smartphone camera at the code below
+            </p>
+
+            <div class="qr-canvas-holder" id="qrContainer"></div>
+
+            <div style="width: 100%;">
+              <div class="qr-url-pill" id="qrUrlDisplay">http://.../player</div>
+              <div style="margin-top: 10px; display: flex; gap: 8px; justify-content: center;">
+                <button class="btn-retro sm" onclick="copyJoinLink()">📋 Copy Link</button>
+                <button class="btn-retro sm" onclick="openPlayerTab()">📱 Open Player Tab</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Waiting Teams List -->
+          <div class="waiting-teams-panel">
+            <div class="panel-header-title">
+              <span>REGISTERED TEAMS</span>
+              <span id="lobbyTeamCountBadge">0 JOINED</span>
+            </div>
+
+            <div class="teams-list-scroll" id="lobbyTeamsList">
+              <div style="text-align: center; color: var(--c-gray); padding: 40px 10px; font-style: italic;">
+                Waiting for teams to join... Scan the QR code to connect!
+              </div>
+            </div>
+
+            <div style="margin-top: 16px; display: flex; flex-direction: column; gap: 8px;">
+              <button class="btn-retro lg primary" id="btnStartGame" onclick="startGame()">
+                ⚔️ START THE QUEST (ENTER ROADMAP)
+              </button>
+              <p style="font-size: 12px; text-align: center; color: var(--c-gray);">
+                You can start with 1 or more teams; others can still join mid-game.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ==========================================
+           VIEW 2: ROADMAP (9 CHECKPOINTS)
+           ========================================== -->
+      <section id="viewRoadmap" class="view-section" style="display: none;">
+        <div class="roadmap-container">
+          <div class="roadmap-header-banner">
+            <div class="roadmap-title">
+              <span>🗺️</span>
+              <span>THE 9 KNOWLEDGE AREAS ROADMAP</span>
+            </div>
+            <div style="font-size: 14px;">
+              Click an unlocked checkpoint to present that Knowledge Area
+            </div>
+          </div>
+
+          <div class="roadmap-grid" id="roadmapGrid">
+            <!-- Dynamically populated 9 checkpoints -->
+          </div>
+
+          <div style="margin-top: 16px; display: flex; justify-content: space-between; align-items: center; background: #fff; border: var(--border-thick); box-shadow: var(--shadow-retro); padding: 14px 20px;">
+            <div style="font-weight: 600; font-size: 15px;">
+              Progress: <strong id="roadmapProgressText">0 / 9 Checkpoints Completed</strong>
+            </div>
+            <div style="display: flex; gap: 10px;">
+              <button class="btn-retro" id="btnGoFinalChallenge" onclick="startFinalChallenge()" style="display: none;">
+                🔥 LAUNCH FINAL MISSION
+              </button>
+              <button class="btn-retro" onclick="hostNavigate('leaderboard')">
+                🏆 View Leaderboard
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ==========================================
+           VIEW 3: LEARNING CONTENT (A, B, C, D)
+           ========================================== -->
+      <section id="viewLearning" class="view-section" style="display: none;">
+        <div class="learning-container">
+          <!-- Hero Banner -->
+          <div class="learning-hero">
+            <div class="learning-hero-left">
+              <div class="hero-avatar" id="learnHeroAvatar">🧩</div>
+              <div>
+                <div class="learning-area-title" id="learnAreaTitle">1. Project Integration Management</div>
+                <div class="learning-area-role" id="learnRoleTitle">Master Integrator</div>
+              </div>
+            </div>
+            <button class="btn-retro sm" onclick="hostNavigate('roadmap')">← Back to Map</button>
+          </div>
+
+          <!-- Section A: What is it? -->
+          <div class="section-a-box">
+            <div class="section-label">
+              <span>📖</span>
+              <span>A. What is it? (Definition)</span>
+            </div>
+            <p class="definition-text" id="learnDefinitionText">
+              The overarching glue that coordinates, balances, and unites all project elements...
+            </p>
+          </div>
+
+          <!-- Section B: What does it involve? -->
+          <div class="section-b-box">
+            <div class="section-label">
+              <span>⚙️</span>
+              <span>B. What does it involve? (Key Processes)</span>
+            </div>
+            <div class="processes-grid" id="learnProcessesGrid">
+              <!-- Dynamically populated process cards -->
+            </div>
+          </div>
+
+          <!-- Section C: Remember This! -->
+          <div class="reminder-card">
+            <div class="reminder-icon">⚠️</div>
+            <div class="reminder-content">
+              <div class="reminder-title">C. REMEMBER THIS! (CRITICAL PM EXAM RULE)</div>
+              <div class="reminder-body" id="learnReminderText">
+                No project changes occur without formal Change Control!
+              </div>
+            </div>
+          </div>
+
+          <!-- Section D: Challenge Launch Controls -->
+          <div class="challenge-launch-bar">
+            <div>
+              <div style="font-family: var(--font-pixel); font-size: 11px; color: var(--c-wood); margin-bottom: 4px;">
+                D. KNOWLEDGE AREA QUIZ
+              </div>
+              <div style="font-size: 14px; color: var(--c-gray);">
+                Launch the 20-second synchronized quiz on all player smartphones!
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 10px;">
+              <button class="btn-retro lg crimson" onclick="startCurrentQuiz()">
+                ⚔️ START CHALLENGE (AUTO 20s TIMER)
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ==========================================
+           VIEW 4: MULTIPLAYER QUIZ SCREEN
+           ========================================== -->
+      <section id="viewQuiz" class="view-section" style="display: none;">
+        <div class="quiz-container">
+          <!-- Quiz Header -->
+          <div class="quiz-header-bar">
+            <div>
+              <span style="font-family: var(--font-pixel); font-size: 10px;">QUIZ CHALLENGE:</span>
+              <strong id="quizAreaTitle" style="font-family: var(--font-main); font-size: 16px; margin-left: 8px;">Area Title</strong>
+            </div>
+
+            <div class="quiz-timer-box" id="quizTimerBox">
+              <span>⏳</span>
+              <span id="quizTimerCount">20s</span>
+            </div>
+          </div>
+
+          <!-- Question Dialog Box -->
+          <div class="question-dialog-card">
+            <div class="question-tag">OFFICIAL PMBOK CHALLENGE QUESTION:</div>
+            <div class="question-text" id="quizQuestionText">
+              Which document formally authorizes the project and gives the Project Manager authority to apply organizational resources?
+            </div>
+          </div>
+
+          <!-- Options Grid -->
+          <div class="options-grid" id="quizOptionsGrid">
+            <!-- 4 Options rendered here -->
+          </div>
+
+          <!-- Live Submissions Tracker -->
+          <div style="background: #fff; border: var(--border-thick); box-shadow: var(--shadow-retro); padding: 12px 18px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-family: var(--font-pixel); font-size: 11px;">SUBMISSIONS:</span>
+              <strong id="quizSubmissionsCount" style="font-family: var(--font-pixel); font-size: 13px; color: var(--c-wood);">0 / 0 TEAMS</strong>
+            </div>
+            <div id="quizStatusNotice" style="font-family: var(--font-retro); font-size: 22px; color: var(--c-crimson);">
+              Timer counting down... players answering on phones!
+            </div>
+          </div>
+
+          <!-- Question Statistics & Breakdown (Displayed automatically when timer reaches zero) -->
+          <div id="quizStatsContainer" style="display: none; background: #fff; border: var(--border-thick); box-shadow: var(--shadow-retro); padding: 14px 18px;">
+            <div style="font-family: var(--font-pixel); font-size: 11px; color: var(--c-wood); margin-bottom: 10px; display: flex; justify-content: space-between;">
+              <span>📊 CLASSROOM RESPONSE BREAKDOWN</span>
+              <span id="quizFastestTeamBadge" style="color: var(--c-green); font-weight: bold;"></span>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; text-align: center;" id="quizChoiceBreakdown">
+              <!-- Option A, B, C, D counters -->
+            </div>
+          </div>
+
+          <!-- Explanation Card (Displayed automatically when timer reaches zero) -->
+          <div class="explanation-card" id="quizExplanationCard" style="display: none;">
+            <div class="explanation-title">✓ CORRECT ANSWER & PMBOK RATIONALE</div>
+            <div class="explanation-body" id="quizExplanationText">
+              Explanation goes here.
+            </div>
+          </div>
+
+          <!-- Speed Points Breakdown Guide -->
+          <div class="speed-points-card">
+            <div class="speed-point-item">🥇 1st: <strong>100 pts</strong></div>
+            <div class="speed-point-item">🥈 2nd: <strong>80 pts</strong></div>
+            <div class="speed-point-item">🥉 3rd: <strong>60 pts</strong></div>
+            <div class="speed-point-item">4th: <strong>40 pts</strong></div>
+            <div class="speed-point-item">Other: <strong>20 pts</strong></div>
+            <div class="speed-point-item">Incorrect: <strong>0 pts</strong></div>
+          </div>
+
+          <!-- Host Action Controls for Quiz (Controlled manually to move forward, never automatic) -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px;">
+            <button class="btn-retro sm" onclick="hostNavigate('roadmap')">
+              ← Return to Roadmap
+            </button>
+            <div style="display: flex; gap: 10px;">
+              <button class="btn-retro lg primary" id="btnNextArea" onclick="unlockNextArea()" style="display: none;">
+                ✓ UNLOCK NEXT CHECKPOINT →
+              </button>
+              <button class="btn-retro lg" id="btnQuizLeaderboard" onclick="hostNavigate('leaderboard')" style="display: none;">
+                🏆 SHOW LEADERBOARD
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ==========================================
+           VIEW 5: LIVE LEADERBOARD
+           ========================================== -->
+      <section id="viewLeaderboard" class="view-section" style="display: none;">
+        <div class="leaderboard-container">
+          <div class="roadmap-header-banner">
+            <div class="roadmap-title">
+              <span>🏆</span>
+              <span>LIVE QUEST LEADERBOARD</span>
+            </div>
+            <div style="font-size: 14px;">
+              Live scores and accumulated points
+            </div>
+          </div>
+
+          <div class="leaderboard-table" id="leaderboardList">
+            <!-- Dynamically populated ranked list -->
+          </div>
+
+          <div style="display: flex; justify-content: space-between; margin-top: 16px;">
+            <button class="btn-retro" onclick="hostNavigate('roadmap')">
+              ← Return to Roadmap
+            </button>
+            <div style="display: flex; gap: 10px;">
+              <button class="btn-retro primary" id="btnResumeLearning" onclick="resumeCurrentCheckpoint()">
+                ⚔️ Continue Checkpoint
+              </button>
+              <button class="btn-retro crimson" id="btnPodiumLaunch" onclick="showPodiumCelebration()" style="display: none;">
+                👑 FINAL PODIUM CELEBRATION
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ==========================================
+           VIEW 6: FINAL CHALLENGE (Scenario)
+           ========================================== -->
+      <section id="viewFinalChallenge" class="view-section" style="display: none;">
+        <div class="learning-container">
+          <div class="learning-hero" style="background: var(--c-crimson);">
+            <div class="learning-hero-left">
+              <div class="hero-avatar">🔥</div>
+              <div>
+                <div class="learning-area-title" id="finalTitle">FINAL MISSION: The CyberPulse Launch Crisis</div>
+                <div class="learning-area-role" style="color: #fff;">Multi-Knowledge Area Scenario Challenge (+150 Bonus Pts)</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-a-box">
+            <div class="section-label">
+              <span>🚨</span>
+              <span>REAL-WORLD PROJECT CRISIS SCENARIO</span>
+            </div>
+            <p class="definition-text" id="finalScenarioText" style="white-space: pre-line; font-size: 15px; font-weight: 500;">
+              Scenario text...
+            </p>
+          </div>
+
+          <div class="section-b-box">
+            <div class="section-label">
+              <span>🎯</span>
+              <span>CHALLENGE: IDENTIFY INVOLVED KNOWLEDGE AREAS</span>
+            </div>
+            <p style="font-size: 15px; margin-bottom: 12px; font-weight: 600;">
+              Teams are currently selecting which Knowledge Areas were actively used to handle this crisis!
+            </p>
+            <div id="finalOptionsDisplay" class="processes-grid">
+              <!-- Render final challenge options -->
+            </div>
+          </div>
+
+          <div class="explanation-card" id="finalExplanationCard" style="display: none;">
+            <div class="explanation-title">✓ INTEGRATED PM RATIONALE</div>
+            <div class="explanation-body" id="finalExplanationText"></div>
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; gap: 12px;">
+            <button class="btn-retro lg gold" id="btnRevealFinal" onclick="revealFinalChallenge()">
+              👁️ REVEAL FINAL RESULTS & BONUS POINTS
+            </button>
+            <button class="btn-retro lg crimson" id="btnFinalToPodium" onclick="showPodiumCelebration()" style="display: none;">
+              👑 PROCEED TO WINNERS' PODIUM →
+            </button>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ==========================================
+           VIEW 7: WINNERS PODIUM & TROPHIES
+           ========================================== -->
+      <section id="viewPodium" class="view-section" style="display: none;">
+        <div class="podium-container">
+          <div class="dialog-row" style="width: 100%;">
+            <div class="dialog-avatar-frame">👑</div>
+            <div class="dialog-box brown">
+              <span class="dialog-speaker-tag">Host Instructor:</span>
+              <p class="dialog-text">
+                "Outstanding work, project managers! You navigated all 9 Knowledge Areas and conquered PM QUEST! Let's honor the champions!"
+              </p>
+            </div>
+          </div>
+
+          <!-- 3D Retro Podium -->
+          <div class="podium-stage">
+            <!-- 2nd Place (Silver) -->
+            <div class="podium-pillar rank-2">
+              <div class="podium-trophy">🥈</div>
+              <div class="podium-team-box">
+                <div class="podium-team-name" id="podium2Name">2nd Place</div>
+                <div class="podium-score" id="podium2Score">0 PTS</div>
+              </div>
+              <div class="podium-block">
+                <span>2ND</span>
+                <span style="font-size: 9px; margin-top: 4px;">SILVER</span>
+              </div>
+            </div>
+
+            <!-- 1st Place (Gold) -->
+            <div class="podium-pillar rank-1">
+              <div class="podium-trophy">🏆</div>
+              <div class="podium-team-box">
+                <div class="podium-team-name" id="podium1Name">1st Place</div>
+                <div class="podium-score" id="podium1Score">0 PTS</div>
+              </div>
+              <div class="podium-block">
+                <span>1ST</span>
+                <span style="font-size: 9px; margin-top: 4px;">CHAMPION</span>
+              </div>
+            </div>
+
+            <!-- 3rd Place (Bronze) -->
+            <div class="podium-pillar rank-3">
+              <div class="podium-trophy">🥉</div>
+              <div class="podium-team-box">
+                <div class="podium-team-name" id="podium3Name">3rd Place</div>
+                <div class="podium-score" id="podium3Score">0 PTS</div>
+              </div>
+              <div class="podium-block">
+                <span>3RD</span>
+                <span style="font-size: 9px; margin-top: 4px;">BRONZE</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Complete Final Scoreboard -->
+          <div style="width: 100%; max-width: 640px; margin-top: 10px;">
+            <div class="panel-header-title">
+              <span>FINAL QUEST STANDINGS</span>
+            </div>
+            <div class="leaderboard-table" id="podiumFullList">
+              <!-- Full rankings -->
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 12px; margin-top: 20px;">
+            <button class="btn-retro lg primary" onclick="hostNavigate('roadmap')">
+              🗺️ Review Roadmap
+            </button>
+            <button class="btn-retro lg crimson" onclick="resetGamePrompt()">
+              🔄 Play Again / Reset Quest
+            </button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/js/qrcode.min.js"></script>
+  <script src="/js/soundFx.js"></script>
+  <script src="/js/knowledgeAreas.js"></script>
+  <script src="/js/confetti.js"></script>
+  <script src="/js/host.js"></script>
+</body>
+</html>

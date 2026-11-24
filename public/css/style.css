@@ -1,0 +1,1214 @@
+/* ==========================================================================
+   PM QUEST – The Project Management Challenge
+   Retro Pixel / Adventure Coffee Aesthetic
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Press+Start+2P&family=VT323&display=swap');
+
+:root {
+  --c-espresso: #2b1a12;
+  --c-wood: #6f4e37;
+  --c-caramel: #d4a373;
+  --c-latte: #d9c9b8;
+  --c-parchment: #f4ece4;
+  --c-crimson: #b23a2e;
+  --c-gold: #d49a2a;
+  --c-gold-light: #fbe28c;
+  --c-green: #2d7a3e;
+  --c-green-light: #d4edda;
+  --c-gray: #8c827a;
+  --c-white: #ffffff;
+
+  --font-pixel: 'Press Start 2P', monospace;
+  --font-retro: 'VT323', monospace;
+  --font-main: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  --border-dark: 2px solid var(--c-espresso);
+  --border-thick: 3px solid var(--c-espresso);
+  --shadow-retro: 3px 3px 0px var(--c-espresso);
+  --shadow-retro-lg: 5px 5px 0px var(--c-espresso);
+  --shadow-retro-sm: 2px 2px 0px var(--c-espresso);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-main);
+  background-color: var(--c-espresso);
+  background-image: 
+    linear-gradient(45deg, #22140e 25%, transparent 25%),
+    linear-gradient(-45deg, #22140e 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #22140e 75%),
+    linear-gradient(-45deg, transparent 75%, #22140e 75%);
+  background-size: 28px 28px;
+  background-position: 0 0, 0 14px, 14px -14px, -14px 0px;
+  color: var(--c-espresso);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ==========================================================================
+   Window Container (Retro OS Window Style)
+   ========================================================================== */
+.quest-window {
+  width: 100%;
+  max-width: 1060px;
+  background-color: var(--c-parchment);
+  border: var(--border-thick);
+  box-shadow: var(--shadow-retro-lg);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  margin: 0 auto 24px auto;
+  position: relative;
+}
+
+/* Window Title Bar */
+.window-titlebar {
+  background-color: var(--c-espresso);
+  color: var(--c-parchment);
+  padding: 7px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  user-select: none;
+  border-bottom: 2px solid var(--c-espresso);
+}
+
+.titlebar-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-pixel);
+  font-size: 11px;
+  letter-spacing: 0.5px;
+}
+
+.titlebar-icon {
+  font-size: 13px;
+}
+
+.titlebar-controls {
+  display: flex;
+  gap: 5px;
+}
+
+.window-btn {
+  background: var(--c-latte);
+  border: 1px solid var(--c-parchment);
+  color: var(--c-espresso);
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 1px 1px 0px #000;
+}
+.window-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: none;
+}
+
+/* Top Stats & Status Bar */
+.window-statusbar {
+  background-color: #e8dcd2;
+  border-bottom: var(--border-dark);
+  padding: 8px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-family: var(--font-retro);
+  font-size: 20px;
+}
+
+.status-badges-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.retro-badge {
+  background: var(--c-parchment);
+  border: var(--border-dark);
+  box-shadow: var(--shadow-retro-sm);
+  padding: 3px 10px;
+  font-size: 17px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--c-espresso);
+}
+.retro-badge.score-badge {
+  background: #fff;
+  color: var(--c-wood);
+}
+.retro-badge.checkpoint-badge {
+  background: var(--c-caramel);
+  color: var(--c-espresso);
+}
+.retro-badge.room-badge {
+  background: var(--c-espresso);
+  color: var(--c-parchment);
+}
+
+.status-controls-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Window Content Body */
+.window-content {
+  padding: 24px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ==========================================================================
+   Retro Buttons & Inputs
+   ========================================================================== */
+.btn-retro {
+  font-family: var(--font-pixel);
+  font-size: 11px;
+  padding: 10px 16px;
+  background-color: var(--c-caramel);
+  color: var(--c-espresso);
+  border: var(--border-dark);
+  box-shadow: var(--shadow-retro);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.08s ease;
+  user-select: none;
+  text-decoration: none;
+}
+.btn-retro:hover {
+  background-color: #dfb283;
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0px var(--c-espresso);
+}
+.btn-retro:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0px var(--c-espresso);
+}
+.btn-retro:disabled {
+  background-color: var(--c-latte);
+  color: var(--c-gray);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: var(--shadow-retro-sm);
+}
+
+.btn-retro.primary {
+  background-color: var(--c-wood);
+  color: var(--c-parchment);
+}
+.btn-retro.primary:hover {
+  background-color: #5c3f2b;
+}
+
+.btn-retro.crimson {
+  background-color: var(--c-crimson);
+  color: #fff;
+}
+.btn-retro.crimson:hover {
+  background-color: #9b2f24;
+}
+
+.btn-retro.gold {
+  background-color: var(--c-gold);
+  color: var(--c-espresso);
+}
+.btn-retro.gold:hover {
+  background-color: #e5a730;
+}
+
+.btn-retro.success {
+  background-color: var(--c-green);
+  color: #fff;
+}
+.btn-retro.success:hover {
+  background-color: #246332;
+}
+
+.btn-retro.sm {
+  font-size: 9px;
+  padding: 6px 10px;
+}
+.btn-retro.lg {
+  font-size: 13px;
+  padding: 14px 22px;
+}
+
+.retro-input {
+  font-family: var(--font-retro);
+  font-size: 24px;
+  padding: 8px 12px;
+  background: #fff;
+  border: var(--border-dark);
+  box-shadow: var(--shadow-retro-sm);
+  color: var(--c-espresso);
+  outline: none;
+  width: 100%;
+}
+.retro-input:focus {
+  border-color: var(--c-crimson);
+  box-shadow: 3px 3px 0px var(--c-crimson);
+}
+
+/* ==========================================================================
+   Retro Dialog Speech Box (Matches uploaded image)
+   ========================================================================== */
+.dialog-row {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.dialog-avatar-frame {
+  width: 58px;
+  height: 58px;
+  background: var(--c-latte);
+  border: var(--border-thick);
+  box-shadow: var(--shadow-retro);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  flex-shrink: 0;
+  border-radius: 2px;
+}
+
+.dialog-box {
+  flex: 1;
+  background: #fff;
+  border: var(--border-thick);
+  box-shadow: var(--shadow-retro);
+  padding: 12px 18px;
+  position: relative;
+}
+
+.dialog-box.brown {
+  background: var(--c-wood);
+  color: var(--c-parchment);
+}
+
+.dialog-speaker-tag {
+  font-family: var(--font-pixel);
+  font-size: 9px;
+  display: inline-block;
+  padding: 3px 8px;
+  background: var(--c-latte);
+  border: var(--border-dark);
+  color: var(--c-espresso);
+  margin-bottom: 8px;
+  box-shadow: 1px 1px 0px var(--c-espresso);
+}
+.dialog-box.brown .dialog-speaker-tag {
+  background: var(--c-caramel);
+  color: var(--c-espresso);
+}
+
+.dialog-text {
+  font-family: var(--font-main);
+  font-size: 17px;
+  line-height: 1.5;
+  font-weight: 500;
+}
+.dialog-box.brown .dialog-text {
+  color: #fff;
+}
+
+/* ==========================================================================
+   Lobby / Waiting Room View
+   ========================================================================== */
+.lobby-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  align-items: stretch;
+}
+
+@media (max-width: 800px) {
+  .lobby-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.qr-card {
+  background: #fff;
+  border: var(--border-thick);
+  box-shadow: var(--shadow-retro);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.qr-canvas-holder {
+  background: var(--c-parchment);
+  border: var(--border-thick);
+  padding: 12px;
+  margin: 16px 0;
+  box-shadow: var(--shadow-retro-sm);
+  display: inline-block;
+}
+
+.qr-url-pill {
+  font-family: var(--font-retro);
+  font-size: 22px;
+  background: var(--c-latte);
+  padding: 6px 14px;
+  border: var(--border-dark);
+  box-shadow: var(--shadow-retro-sm);
+  color: var(--c-espresso);
+  word-break: break-all;
+  margin-top: 8px;
+  font-weight: 600;
+}
+
+.waiting-teams-panel {
+  background: #fff;
+  border: var(--border-thick);
+  box-shadow: var(--shadow-retro);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.panel-header-title {
+  font-family: var(--font-pixel);
+  font-size: 13px;
+  color: var(--c-wood);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px dashed var(--c-latte);
+  padding-bottom: 8px;
+}
+
+.teams-list-scroll {
+  flex: 1;
+  min-height: 200px;
+  max-height: 320px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-right: 6px;
+}
+
+.team-chip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: var(--c-parchment);
+  border: var(--border-dark);
+  box-shadow: var(--shadow-retro-sm);
+}
+
+.team-chip-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.team-avatar-icon {
+  font-size: 22px;
+}
+
+.team-chip-name {
+  font-family: var(--font-main);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--c-espresso);
+}
+
+.team-chip-status {
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  color: var(--c-green);
+  background: var(--c-green-light);
+  padding: 3px 6px;
+  border: 1px solid var(--c-green);
+}
+
+/* ==========================================================================
+   Adventure Roadmap (9 Checkpoints)
+   ========================================================================== */
+.roadmap-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.roadmap-header-banner {
+  background: var(--c-wood);
+  color: #fff;
+  border: var(--border-thick);
+  box-shadow: var(--shadow-retro);
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.roadmap-title {
+  font-family: var(--font-pixel);
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.roadmap-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 10px;
+}
+
+@media (max-width: 860px) {
+  .roadmap-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 540px) {
+  .roadmap-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.checkpoint-card {
+  background: #fff;
+  border: var(--border-thick);
+  box-shadow: var(--shadow-retro);
+  padding: 16px;
+  border-radius: 2px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  user-select: none;
+}
+
+.checkpoint-card.locked {
+  background: #e9e2db;
+  opacity: 0.65;
+  border-color: #8c827a;
+  box-shadow: var(--shadow-retro-sm);
+  cursor: not-allowed;
+}
+
+.checkpoint-card.unlocked {
+  cursor: pointer;
+  border-color: var(--c-espresso);
+  background: #fff;
+}
+.checkpoint-card.unlocked:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0px var(--c-espresso);
+}
+
+.checkpoint-card.active {
+  border: 3px solid var(--c-crimson);
+  background: #fffcf8;
+  box-shadow: 4px 4px 0px var(--c-crimson);
+}
+
+.checkpoint-card.completed {
+  border-color: var(--c-green);
+  background: #f7fcf8;
+}
+
+.checkpoint-top-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.checkpoint-number {
+  font-family: var(--font-pixel);
+  font-size: 9px;
+  padding: 3px 6px;
+  background: var(--c-latte);
+  border: 1px solid var(--c-espresso);
+}
+.checkpoint-card.active .checkpoint-number {
+  background: var(--c-crimson);
+  color: #fff;
+}
+.checkpoint-card.completed .checkpoint-number {
+  background: var(--c-green);
+  color: #fff;
+}
+
+.checkpoint-status-badge {
+  font-size: 15px;
+}
+
+.checkpoint-role-badge {
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  color: var(--c-wood);
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.checkpoint-title-text {
+  font-family: var(--font-main);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--c-espresso);
+  line-height: 1.3;
+  margin-bottom: 12px;
+  flex: 1;
+}
+
+.checkpoint-btn-action {
+  margin-top: auto;
+}
+
+/* Pulsing flag for active checkpoint */
+.pulse-flag {
+  display: inline-block;
+  animation: pulseAnim 1.4s infinite;
+}
+@keyframes pulseAnim {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+/* ==========================================================================
+   Learning View (Structure A, B, C, D)
+   ========================================================================== */
+.learning-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.learning-hero {
+  background: var(--c-wood);
+  color: #fff;
+  border: var(--border-thick);
+  box-shadow: var(--shadow-retro);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.learning-hero-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.hero-avatar {
+  font-size: 38px;
+  background: var(--c-caramel);
+  border: var(--border-dark);
+  padding: 6px 10px;
+  box-shadow: var(--shadow-retro-sm);
+}
+
+.learning-area-title {
+  font-family: var(--font-pixel);
+  font-size: 15px;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.learning-area-role {
+  font-family: var(--font-retro);
+  font-size: 24px;
+  color: var(--c-gold-light);
+  letter-spacing: 0.5px;
+}
+
+/* Section A: What is it? */
+.section-a-box {
+  background: #fff;
+  border: var(--border-thick);
+  box-shadow: var(--shadow-retro);
+  padding: 16px 20px;
+}
+
+.section-label {
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  color: var(--c-crimson);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.definition-text {
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--c-espresso);
+}
+
+/* Section B: What does it involve? */
+.processes-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-top: 10px;
+}
+
+@media (max-width: 768px) {
+  .processes-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.process-card {
+  background: #fff;
+  border: var(--border-dark);
+  box-shadow: var(--shadow-retro-sm);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.process-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.process-number {
+  font-family: var(--font-pixel);
+  font-size: 9px;
+  background: var(--c-espresso);
+  color: var(--c-parchment);
+  width: 20px;
+  height: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.process-name {
+  font-family: var(--font-main);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--c-wood);
+}
+
+.process-desc {
+  font-size: 14px;
+  line-height: 1.45;
+  color: #3b2c24;
+}
+
+/* Section C: Remember This! */
+.reminder-card {
+  background: #fff4f0;
+  border: 3px solid var(--c-crimson);
+  box-shadow: 4px 4px 0px var(--c-crimson);
+  padding: 16px 20px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.reminder-icon {
+  font-size: 28px;
+}
+
+.reminder-content {
+  flex: 1;
+}
+
+.reminder-title {
+  font-family: var(--font-pixel);
+  font-size: 11px;
+  color: var(--c-crimson);
+  margin-bottom: 6px;
+}
+
+.reminder-body {
+  font-size: 15px;
+  line-height: 1.5;
+  font-weight: 600;
+  color: var(--c-espresso);
+  white-space: pre-line;
+}
+
+/* Section D: Challenge Launch Controls */
+.challenge-launch-bar {
+  background: #fff;
+  border: var(--border-thick);
+  box-shadow: var(--shadow-retro);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* ==========================================================================
+   Multiplayer Quiz Screen (Timed & Interactive)
+   ========================================================================== */
+.quiz-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.quiz-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--c-wood);
+  color: #fff;
+  border: var(--border-thick);
+  box-shadow: var(--shadow-retro);
+  padding: 12px 18px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.quiz-timer-box {
+  background: var(--c-espresso);
+  color: #fff;
+  border: var(--border-dark);
+  box-shadow: var(--shadow-retro-sm);
+  padding: 6px 16px;
+  font-family: var(--font-pixel);
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.quiz-timer-box.hurry {
+  background: var(--c-crimson);
+  animation: pulseHurry 0.6s infinite alternate;
+}
+@keyframes pulseHurry {
+  from { transform: scale(1); }
+  to { transform: scale(1.06); }
+}
+
+.question-dialog-card {
+  background: #fff;
+  border: var(--border-thick);
+  box-shadow: var(--shadow-retro);
+  padding: 20px 24px;
+}
+
+.question-tag {
+  font-family: var(--font-pixel);
+  font-size: 10px;
+  color: var(--c-crimson);
+  margin-bottom: 10px;
+}
+
+.question-text {
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.45;
+  color: var(--c-espresso);
+}
+
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.quiz-option-btn {
+  background: #fff;
+  border: var(--border-thick);
+  box-shadow: var(--shadow-retro);
+  padding: 14px 20px;
+  font-family: var(--font-main);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--c-espresso);
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: all 0.08s ease;
+  user-select: none;
+  width: 100%;
+}
+
+.quiz-option-btn:hover:not(:disabled) {
+  background: #fffaf4;
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0px var(--c-espresso);
+}
+.quiz-option-btn:active:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0px var(--c-espresso);
+}
+
+.quiz-option-btn.selected {
+  background: var(--c-caramel);
+  border-color: var(--c-espresso);
+  box-shadow: 3px 3px 0px var(--c-espresso);
+}
+
+.quiz-option-btn.correct {
+  background: var(--c-green-light);
+  border-color: var(--c-green);
+  color: var(--c-green);
+}
+
+.quiz-option-btn.incorrect {
+  background: #fde8e8;
+  border-color: var(--c-crimson);
+  color: var(--c-crimson);
+  opacity: 0.7;
+}
+
+.option-letter-badge {
+  font-family: var(--font-pixel);
+  font-size: 11px;
+  background: var(--c-espresso);
+  color: var(--c-parchment);
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.quiz-option-btn.selected .option-letter-badge {
+  background: var(--c-wood);
+  color: #fff;
+}
+.quiz-option-btn.correct .option-letter-badge {
+  background: var(--c-green);
+  color: #fff;
+}
+
+/* Explanation dialog */
+.explanation-card {
+  background: #fff;
+  border: 3px solid var(--c-green);
+  box-shadow: 4px 4px 0px var(--c-green);
+  padding: 16px 20px;
+}
+
+.explanation-title {
+  font-family: var(--font-pixel);
+  font-size: 11px;
+  color: var(--c-green);
+  margin-bottom: 6px;
+}
+
+.explanation-body {
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--c-espresso);
+}
+
+/* Points Breakdown Table */
+.speed-points-card {
+  background: #fff;
+  border: var(--border-dark);
+  box-shadow: var(--shadow-retro-sm);
+  padding: 12px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: space-around;
+  font-family: var(--font-pixel);
+  font-size: 9px;
+}
+
+.speed-point-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ==========================================================================
+   Live Leaderboard
+   ========================================================================== */
+.leaderboard-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.leaderboard-table {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.leaderboard-row {
+  background: #fff;
+  border: var(--border-thick);
+  box-shadow: var(--shadow-retro);
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.leaderboard-row.rank-1 {
+  background: #fffbe6;
+  border-color: var(--c-gold);
+  box-shadow: 3px 3px 0px var(--c-gold);
+}
+.leaderboard-row.rank-2 {
+  background: #f7f7f7;
+  border-color: #888;
+}
+.leaderboard-row.rank-3 {
+  background: #fcf4eb;
+  border-color: #cd7f32;
+}
+
+.lb-rank-badge {
+  font-family: var(--font-pixel);
+  font-size: 12px;
+  width: 32px;
+  text-align: center;
+}
+
+.lb-team-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.lb-team-name {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--c-espresso);
+}
+
+.lb-team-points {
+  font-family: var(--font-pixel);
+  font-size: 13px;
+  color: var(--c-wood);
+}
+
+/* ==========================================================================
+   Podium Screen & Confetti
+   ========================================================================== */
+.podium-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 24px;
+  position: relative;
+}
+
+.podium-stage {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 16px;
+  margin: 30px 0 10px 0;
+  width: 100%;
+  max-width: 640px;
+}
+
+.podium-pillar {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.podium-block {
+  width: 100%;
+  border: var(--border-thick);
+  box-shadow: var(--shadow-retro);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-pixel);
+  padding: 12px 6px;
+}
+
+.podium-pillar.rank-1 .podium-block {
+  height: 170px;
+  background: var(--c-gold);
+  color: #fff;
+  border-color: #a37213;
+}
+.podium-pillar.rank-2 .podium-block {
+  height: 130px;
+  background: #c0c0c0;
+  color: var(--c-espresso);
+  border-color: #777;
+}
+.podium-pillar.rank-3 .podium-block {
+  height: 100px;
+  background: #cd7f32;
+  color: #fff;
+  border-color: #8c521b;
+}
+
+.podium-trophy {
+  font-size: 40px;
+  margin-bottom: 8px;
+}
+
+.podium-team-box {
+  background: #fff;
+  border: var(--border-dark);
+  box-shadow: var(--shadow-retro-sm);
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  width: 90%;
+}
+.podium-team-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--c-espresso);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.podium-score {
+  font-family: var(--font-pixel);
+  font-size: 9px;
+  color: var(--c-wood);
+  margin-top: 4px;
+}
+
+#confettiCanvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 999;
+}
+
+/* ==========================================================================
+   Mobile Player Screen Specifics
+   ========================================================================== */
+.player-screen {
+  max-width: 580px;
+}
+
+.player-status-card {
+  background: #fff;
+  border: var(--border-thick);
+  box-shadow: var(--shadow-retro);
+  padding: 14px 18px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.player-score-tag {
+  font-family: var(--font-pixel);
+  font-size: 11px;
+  color: var(--c-wood);
+}
+
+.player-quiz-options {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.avatar-selector-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin: 14px 0;
+}
+
+.avatar-choice-btn {
+  background: #fff;
+  border: var(--border-dark);
+  box-shadow: var(--shadow-retro-sm);
+  font-size: 26px;
+  padding: 10px;
+  cursor: pointer;
+  text-align: center;
+}
+.avatar-choice-btn.selected {
+  background: var(--c-caramel);
+  border: 2px solid var(--c-espresso);
+  box-shadow: 2px 2px 0px var(--c-espresso);
+}
+
+/* Mobile adjustments */
+@media (max-width: 600px) {
+  body {
+    padding: 8px;
+  }
+  .window-content {
+    padding: 14px;
+  }
+  .window-statusbar {
+    font-size: 16px;
+    padding: 6px 10px;
+  }
+  .retro-badge {
+    font-size: 14px;
+    padding: 2px 6px;
+  }
+  .question-text {
+    font-size: 16px;
+  }
+  .quiz-option-btn {
+    font-size: 14px;
+    padding: 10px 14px;
+  }
+}

@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: pm-quest
+    env: node
+    plan: free
+    region: frankfurt # Can be changed to oregon or ohio in Render dashboard
+    buildCommand: echo "Build complete"
+    startCommand: node server.js
+    healthCheckPath: /healthz
+    autoDeploy: true

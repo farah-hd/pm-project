@@ -1,0 +1,23 @@
+{
+  "name": "pm-quest",
+  "version": "1.0.0",
+  "description": "PM QUEST – The Project Management Challenge Interactive Web Application",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "build": "echo \"Build complete\""
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "project-management",
+    "pmbok",
+    "game",
+    "presentation",
+    "multiplayer",
+    "render"
+  ],
+  "author": "",
+  "license": "MIT"
+}

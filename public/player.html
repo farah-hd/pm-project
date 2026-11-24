@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>PM QUEST – Player Phone Console</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📱</text></svg>">
+</head>
+<body>
+
+  <div class="quest-window player-screen">
+    <!-- Window Title Bar -->
+    <header class="window-titlebar">
+      <div class="titlebar-left">
+        <span class="titlebar-icon">■</span>
+        <span id="playerTitlebarText">PM_QUEST.EXE [PLAYER]</span>
+      </div>
+      <div class="titlebar-controls">
+        <button class="window-btn" id="playerSoundBtn" title="Toggle Sound">🔊</button>
+      </div>
+    </header>
+
+    <!-- Player Status Bar -->
+    <div class="window-statusbar" id="playerStatusBar" style="display: none;">
+      <div class="status-badges-group">
+        <div class="retro-badge score-badge">
+          <span id="playerAvatarBadge">🧙‍♂️</span>
+          <strong id="playerTeamNameBadge">Team Name</strong>
+        </div>
+        <div class="retro-badge checkpoint-badge">
+          <span>SCORE:</span>
+          <strong id="playerScoreBadge">0 PTS</strong>
+        </div>
+      </div>
+      <div class="status-badges-group">
+        <div class="retro-badge" id="playerRankBadge" style="background: var(--c-espresso); color: #fff;">
+          <span>RANK:</span>
+          <strong id="playerRankNumber">#1</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content Body -->
+    <main class="window-content">
+
+      <!-- ==========================================
+           PLAYER VIEW 1: REGISTRATION / JOIN
+           ========================================== -->
+      <section id="playerViewJoin" class="view-section">
+        <div class="dialog-row">
+          <div class="dialog-avatar-frame">🧙‍♂️</div>
+          <div class="dialog-box brown">
+            <span class="dialog-speaker-tag">Quest Registrar:</span>
+            <p class="dialog-text">
+              "Welcome, adventurer! Choose an avatar and enter your team name to join the Project Management Quest!"
+            </p>
+          </div>
+        </div>
+
+        <form id="playerJoinForm" onsubmit="handlePlayerJoin(event)" style="display: flex; flex-direction: column; gap: 14px;">
+          <div>
+            <label style="font-family: var(--font-pixel); font-size: 10px; color: var(--c-wood); display: block; margin-bottom: 6px;">
+              CHOOSE TEAM AVATAR:
+            </label>
+            <div class="avatar-selector-grid">
+              <div class="avatar-choice-btn selected" data-avatar="adventurer" onclick="selectAvatar('adventurer', this)">🧙‍♂️</div>
+              <div class="avatar-choice-btn" data-avatar="knight" onclick="selectAvatar('knight', this)">⚔️</div>
+              <div class="avatar-choice-btn" data-avatar="archer" onclick="selectAvatar('archer', this)">🏹</div>
+              <div class="avatar-choice-btn" data-avatar="mage" onclick="selectAvatar('mage', this)">🔮</div>
+              <div class="avatar-choice-btn" data-avatar="tactician" onclick="selectAvatar('tactician', this)">📜</div>
+              <div class="avatar-choice-btn" data-avatar="engineer" onclick="selectAvatar('engineer', this)">⚙️</div>
+              <div class="avatar-choice-btn" data-avatar="builder" onclick="selectAvatar('builder', this)">🧱</div>
+              <div class="avatar-choice-btn" data-avatar="captain" onclick="selectAvatar('captain', this)">🧭</div>
+            </div>
+          </div>
+
+          <div>
+            <label for="inputTeamName" style="font-family: var(--font-pixel); font-size: 10px; color: var(--c-wood); display: block; margin-bottom: 6px;">
+              ENTER TEAM NAME:
+            </label>
+            <input type="text" id="inputTeamName" class="retro-input" placeholder="e.g. Agile Warriors" required maxlength="24" autocomplete="off">
+          </div>
+
+          <button type="submit" class="btn-retro lg primary" style="width: 100%; margin-top: 6px;">
+            ⚔️ JOIN QUEST ROOM
+          </button>
+        </form>
+      </section>
+
+
+      <!-- ==========================================
+           PLAYER VIEW 2: WAITING ROOM
+           ========================================== -->
+      <section id="playerViewWaiting" class="view-section" style="display: none;">
+        <div class="player-status-card">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <span style="font-size: 32px;" id="waitingCardAvatar">🧙‍♂️</span>
+            <div>
+              <div style="font-family: var(--font-pixel); font-size: 9px; color: var(--c-gray);">REGISTERED TEAM</div>
+              <div style="font-size: 18px; font-weight: 700; color: var(--c-espresso);" id="waitingCardTeamName">Team Name</div>
+            </div>
+          </div>
+          <span class="team-chip-status">READY</span>
+        </div>
+
+        <div class="dialog-row">
+          <div class="dialog-avatar-frame">⏳</div>
+          <div class="dialog-box">
+            <span class="dialog-speaker-tag">Waiting Room:</span>
+            <p class="dialog-text" style="color: var(--c-espresso);">
+              "You are connected! Keep this page open on your phone. When the host starts the presentation, your phone will sync automatically!"
+            </p>
+          </div>
+        </div>
+
+        <div style="background: #fff; border: var(--border-thick); box-shadow: var(--shadow-retro); padding: 14px; text-align: center;">
+          <div style="font-family: var(--font-pixel); font-size: 10px; color: var(--c-wood); margin-bottom: 8px;">
+            CONNECTED CO-PLAYERS:
+          </div>
+          <div id="playerWaitingTeamsList" style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;">
+            <!-- Other teams badges -->
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ==========================================
+           PLAYER VIEW 3: ROADMAP PROGRESSION
+           ========================================== -->
+      <section id="playerViewRoadmap" class="view-section" style="display: none;">
+        <div class="dialog-row">
+          <div class="dialog-avatar-frame">🗺️</div>
+          <div class="dialog-box brown">
+            <span class="dialog-speaker-tag">Quest Navigator:</span>
+            <p class="dialog-text">
+              "Follow the presenter on the big screen! The current checkpoint is highlighted below."
+            </p>
+          </div>
+        </div>
+
+        <div class="roadmap-grid" id="playerRoadmapGrid">
+          <!-- 9 checkpoints list -->
+        </div>
+      </section>
+
+
+      <!-- ==========================================
+           PLAYER VIEW 4: LEARNING CONTENT (IDENTICAL TO HOST)
+           ========================================== -->
+      <section id="playerViewLearning" class="view-section" style="display: none;">
+        <div class="learning-container">
+          <!-- Hero Banner -->
+          <div class="learning-hero">
+            <div class="learning-hero-left">
+              <div class="hero-avatar" id="playerLearnAvatar">🧩</div>
+              <div>
+                <div class="learning-area-title" id="playerLearnAreaTitle">1. Project Integration Management</div>
+                <div class="learning-area-role" id="playerLearnRoleTitle">Master Integrator</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section A: What is it? -->
+          <div class="section-a-box">
+            <div class="section-label">
+              <span>📖</span>
+              <span>A. What is it? (Definition)</span>
+            </div>
+            <p class="definition-text" id="playerLearnDefText"></p>
+          </div>
+
+          <!-- Section B: What does it involve? -->
+          <div class="section-b-box">
+            <div class="section-label">
+              <span>⚙️</span>
+              <span>B. What does it involve? (Key Processes)</span>
+            </div>
+            <div class="processes-grid" id="playerLearnProcessesGrid"></div>
+          </div>
+
+          <!-- Section C: Remember This! -->
+          <div class="reminder-card">
+            <div class="reminder-icon">⚠️</div>
+            <div class="reminder-content">
+              <div class="reminder-title">C. REMEMBER THIS! (CRITICAL PM EXAM RULE)</div>
+              <div class="reminder-body" id="playerLearnReminderText"></div>
+            </div>
+          </div>
+
+          <!-- Player Quiz Readiness Notice -->
+          <div style="background: var(--c-wood); color: #fff; border: var(--border-thick); box-shadow: var(--shadow-retro); padding: 14px 18px; text-align: center;">
+            <div style="font-family: var(--font-pixel); font-size: 11px; margin-bottom: 4px;">
+              ⚔️ CHALLENGE PREPARATION
+            </div>
+            <div style="font-size: 14px; color: var(--c-latte);">
+              The presenter will launch the timed quiz shortly. Be fast for maximum points!
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ==========================================
+           PLAYER VIEW 5: LIVE QUIZ QUESTION & ANSWERS
+           ========================================== -->
+      <section id="playerViewQuiz" class="view-section" style="display: none;">
+        <div class="quiz-container">
+          <!-- Quiz Header -->
+          <div class="quiz-header-bar">
+            <div>
+              <span style="font-family: var(--font-pixel); font-size: 9px;">QUIZ TIME:</span>
+              <strong id="playerQuizAreaTitle" style="font-size: 14px; margin-left: 6px;">Area Title</strong>
+            </div>
+            <div class="quiz-timer-box" id="playerTimerBox">
+              <span>⏳</span>
+              <span id="playerTimerCount">20s</span>
+            </div>
+          </div>
+
+          <!-- Question Text (Visible on phone!) -->
+          <div class="question-dialog-card">
+            <div class="question-tag">QUESTION:</div>
+            <div class="question-text" id="playerQuizQuestionText" style="font-size: 17px;">
+              Which document formally authorizes the project?
+            </div>
+          </div>
+
+          <!-- Answer Options -->
+          <div class="player-quiz-options" id="playerQuizOptions">
+            <!-- 4 Multiple Choice Buttons -->
+          </div>
+
+          <!-- Submission & Waiting Status Banner -->
+          <div id="playerSubmitStatus" style="background: #fff; border: var(--border-thick); box-shadow: var(--shadow-retro); padding: 12px 16px; text-align: center; font-weight: 600;">
+            Tap an option above to submit! Be fast!
+          </div>
+
+          <!-- Answer Result Card (Displayed automatically when question timer reaches zero) -->
+          <div class="explanation-card" id="playerResultCard" style="display: none;">
+            <div class="explanation-title" id="playerResultTitle">✓ QUESTION RESULTS</div>
+            <div class="explanation-body" id="playerResultBody" style="font-weight: 700; font-size: 17px; margin-bottom: 6px;"></div>
+            <div id="playerResultExplanation" style="font-size: 14px; color: var(--c-espresso); line-height: 1.45;"></div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ==========================================
+           PLAYER VIEW 6: LIVE LEADERBOARD
+           ========================================== -->
+      <section id="playerViewLeaderboard" class="view-section" style="display: none;">
+        <div class="leaderboard-container">
+          <div class="roadmap-header-banner">
+            <div class="roadmap-title">
+              <span>🏆</span>
+              <span>LIVE QUEST RANKINGS</span>
+            </div>
+          </div>
+
+          <div class="leaderboard-table" id="playerLeaderboardList">
+            <!-- Team rankings -->
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ==========================================
+           PLAYER VIEW 7: FINAL CHALLENGE (SCENARIO)
+           ========================================== -->
+      <section id="playerViewFinal" class="view-section" style="display: none;">
+        <div class="learning-container">
+          <div class="learning-hero" style="background: var(--c-crimson);">
+            <div class="learning-hero-left">
+              <div class="hero-avatar">🔥</div>
+              <div>
+                <div class="learning-area-title">FINAL MISSION</div>
+                <div class="learning-area-role" style="color: #fff;">The CyberPulse Launch Crisis</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-a-box">
+            <div class="section-label">
+              <span>🚨</span>
+              <span>READ CRISIS SCENARIO</span>
+            </div>
+            <p id="playerFinalScenario" style="font-size: 14px; line-height: 1.5;"></p>
+          </div>
+
+          <div class="section-b-box">
+            <div class="section-label">
+              <span>🎯</span>
+              <span>SELECT APPLIED KNOWLEDGE AREAS:</span>
+            </div>
+            <div id="playerFinalCheckboxes" style="display: flex; flex-direction: column; gap: 8px; margin-top: 8px;">
+              <!-- Multi-select checkboxes -->
+            </div>
+
+            <button class="btn-retro lg gold" id="btnSubmitFinal" onclick="submitFinalChallengeAnswers()" style="width: 100%; margin-top: 14px;">
+              ✓ SUBMIT FINAL MISSION CHOICES
+            </button>
+            <div id="playerFinalStatus" style="text-align: center; font-weight: 600; margin-top: 8px;"></div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ==========================================
+           PLAYER VIEW 8: WINNERS PODIUM
+           ========================================== -->
+      <section id="playerViewPodium" class="view-section" style="display: none;">
+        <div class="podium-container">
+          <div class="dialog-row" style="width: 100%;">
+            <div class="dialog-avatar-frame">👑</div>
+            <div class="dialog-box brown">
+              <span class="dialog-speaker-tag">Quest Champion:</span>
+              <p class="dialog-text">
+                "Quest Complete! Look up at the presentation screen for the grand victory celebration!"
+              </p>
+            </div>
+          </div>
+
+          <div class="leaderboard-table" id="playerPodiumRankings" style="width: 100%;">
+            <!-- Final standings -->
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/js/soundFx.js"></script>
+  <script src="/js/knowledgeAreas.js"></script>
+  <script src="/js/player.js"></script>
+</body>
+</html>

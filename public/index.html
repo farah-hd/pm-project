@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PM QUEST – The Project Management Challenge</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚔️</text></svg>">
+</head>
+<body>
+
+  <div class="quest-window" style="max-width: 780px;">
+    <!-- Window Title Bar -->
+    <header class="window-titlebar">
+      <div class="titlebar-left">
+        <span class="titlebar-icon">■</span>
+        <span>PM_QUEST_LAUNCHER.EXE</span>
+      </div>
+      <div class="titlebar-controls">
+        <button class="window-btn" onclick="location.reload()">↻</button>
+      </div>
+    </header>
+
+    <main class="window-content" style="padding: 30px; text-align: center;">
+      <div style="font-size: 54px; margin-bottom: 10px;">⚔️ 🗺️ 🏆</div>
+
+      <h1 style="font-family: var(--font-pixel); font-size: 22px; color: var(--c-wood); line-height: 1.4; margin-bottom: 8px;">
+        PM QUEST
+      </h1>
+      <h2 style="font-family: var(--font-retro); font-size: 28px; color: var(--c-crimson); margin-bottom: 20px;">
+        THE PROJECT MANAGEMENT CHALLENGE
+      </h2>
+
+      <div class="dialog-row" style="text-align: left; margin-bottom: 24px;">
+        <div class="dialog-avatar-frame">🧙‍♂️</div>
+        <div class="dialog-box brown">
+          <span class="dialog-speaker-tag">Quest Master:</span>
+          <p class="dialog-text">
+            "Transforming the <strong>9 PMBOK Knowledge Areas</strong> into an interactive, real-time multiplayer adventure. Select your portal to begin!"
+          </p>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px;">
+        <!-- Host Portal Card -->
+        <div class="qr-card" style="padding: 24px 18px;">
+          <div style="font-size: 40px; margin-bottom: 8px;">📺</div>
+          <h3 style="font-family: var(--font-pixel); font-size: 13px; color: var(--c-wood); margin-bottom: 8px;">
+            HOST (PRESENTER)
+          </h3>
+          <p style="font-size: 14px; color: var(--c-gray); margin-bottom: 16px; min-height: 42px;">
+            Display on the classroom projector screen. Controls roadmap, learning content & timer.
+          </p>
+          <a href="/host" class="btn-retro lg primary" style="width: 100%;">
+            🖥️ LAUNCH HOST SCREEN
+          </a>
+        </div>
+
+        <!-- Player Portal Card -->
+        <div class="qr-card" style="padding: 24px 18px;">
+          <div style="font-size: 40px; margin-bottom: 8px;">📱</div>
+          <h3 style="font-family: var(--font-pixel); font-size: 13px; color: var(--c-wood); margin-bottom: 8px;">
+            PLAYER (STUDENTS)
+          </h3>
+          <p style="font-size: 14px; color: var(--c-gray); margin-bottom: 16px; min-height: 42px;">
+            Open on smartphones or laptops. Enter team name, follow roadmap, and buzz in to score points!
+          </p>
+          <a href="/player" class="btn-retro lg crimson" style="width: 100%;">
+            📱 JOIN AS PLAYER
+          </a>
+        </div>
+      </div>
+
+      <!-- Overview of the 9 Checkpoints -->
+      <div style="background: #fff; border: var(--border-thick); box-shadow: var(--shadow-retro); padding: 16px; text-align: left;">
+        <div style="font-family: var(--font-pixel); font-size: 11px; color: var(--c-wood); margin-bottom: 8px;">
+          🗺️ THE 9 KNOWLEDGE AREAS EXPEDITION:
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; font-size: 13px; font-weight: 600;">
+          <div>1. Integration (Master Integrator)</div>
+          <div>2. Scope (Scope Guardian)</div>
+          <div>3. Schedule (Time Lord)</div>
+          <div>4. Cost (Budget Master)</div>
+          <div>5. Quality (Quality Champion)</div>
+          <div>6. Resource (Team Architect)</div>
+          <div>7. Communications (Communicator)</div>
+          <div>8. Risk (Risk Strategist)</div>
+          <div>9. Procurement (Procurement Titan)</div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>
